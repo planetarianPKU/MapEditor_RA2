@@ -1560,8 +1560,8 @@ namespace EditMap2
             var mf = new MemoryFile(isoMapPack);
 
             //Console.WriteLine(BitConverter.ToString(lzoData));
-            int numtiles = 0;
-            int count = 0;
+            //int numtiles = 0;
+            //int count = 0;
             //List<List<IsoTile>> TilesList = new List<List<IsoTile>>(Width * 2 - 1);
             List<IsoTile> Tile_input_list = new List<IsoTile>();
             //Console.WriteLine(TilesList.Capacity);
@@ -1578,8 +1578,9 @@ namespace EditMap2
                 byte subtile = mf.ReadByte();//Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at the end of the stream.
                 byte z = mf.ReadByte();
                 byte zero2 = mf.ReadByte();
-                if (tilenum==49){
-                    Console.WriteLine("rx={0},ry={1},tilenum={2},subtile={3},z={4}", rx, ry, tilenum, subtile, z); }
+                //这是我用来调试的
+                //if (tilenum==49){
+                  //  Console.WriteLine("rx={0},ry={1},tilenum={2},subtile={3},z={4}", rx, ry, tilenum, subtile, z); }
                 //一次循环读11 bytes
                 count++;
                 int dx = rx - ry + Width - 1;
@@ -1626,8 +1627,8 @@ namespace EditMap2
             //var TilesList = new List<IsoTile>();
             //Console.WriteLine(TilesList);
 
-
-            ///*
+            
+            /*
             int count2 = 0;
             foreach (var tile in Tiles)
             {
@@ -1635,9 +1636,10 @@ namespace EditMap2
                 count2++;
                 Console.WriteLine("{0}", count2);
             }
-            //*/
+            */
             //Console.WriteLine("Hello World!");
             //Console.WriteLine(Tiles);
+            //以下是生成编码部分
             ///*
                long di = 0;
                var isoMapPack2 = new byte[lzoPackSize]; 
@@ -1655,7 +1657,7 @@ namespace EditMap2
                var compressed = Format5.Encode(isoMapPack2, 5);
 
                string compressed64 = Convert.ToBase64String(compressed);
-               Console.WriteLine(compressed64);//这里得到的和输入的不一样，也就是说不能复原
+               //Console.WriteLine(compressed64);
                int j = 1;
                int idx = 0;
                var isoMapPack5=new IniFile.IniSection();//问题可能出在这里
