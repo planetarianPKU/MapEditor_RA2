@@ -8,7 +8,7 @@ def save_to_file(file_name, contents):
     fh.close()
 
 
-mapfile_yrm = open('testmap..yrm','r');
+mapfile_yrm = open('mfs.yrm','r');
 mapfile = mapfile_yrm.read();
 lines = mapfile.splitlines();
 
@@ -33,24 +33,24 @@ TitleindexList=[];
 for line in lines:
     for title in TitleList:
         if title == line:
-            TitleindexList.append((title,lines.index(title)));
+            TitleindexList.append([title,lines.index(title)]);
 start=lines.index('[IsoMapPack5]');
-end=lines.index('[Lighting]');
+index1=TitleList.index('[IsoMapPack5]');
+end=TitleindexList[index1+1][1];
 alist=lines[start+1:end];
 
-
-#读取
-#file = open('xxxx.txt', 'r');
-#binstr = file.read();
-#数据标准化处理，因为复制过来的数据是一行行的
-#alist=binstr.splitlines();
 totalstr='';
 
+#i = 0;
 for line in alist:
     totalstr=totalstr+line.split("=")[1];
+ #   i=i+1;
 
-save_to_file('strr.txt', totalstr)    
-#totalstr=totalstr+'=';#文件末尾的补位符号会被切掉，因此要手动补一下
+counts=lines[end-1].count('=');
+totalstr=totalstr+'='*counts;#文件末尾的补位符号会被切掉，因此要手动补一下
+save_to_file('IsoMapPack5.section', totalstr)  
+
+
 
 #解码得到byte array
 totalstr=bytes(totalstr,"utf8");#str转byte
