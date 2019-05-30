@@ -2,38 +2,55 @@
 #import struct
 import base64
 import re
+
 def save_to_file(file_name, contents):
     fh = open(file_name, 'w')
     fh.write(contents)
     fh.close()
 
+#读取yrm文件
+def ReadMapFile(file_name):
+    mf=open(file_name,'r');
+    mf=mf.read();
+    linelist = mf.splitlines();
+    while '' in linelist:
+        linelist.remove('');#去掉换行符号
+    return linelist
 
-mapfile_yrm = open('mfs.yrm','r');
-mapfile = mapfile_yrm.read();
-lines = mapfile.splitlines();
+def ReadTitle(linelist):
+    TitleList=[];
+    p1 = re.compile('[\[](.*?)[\]]', re.S);
+    for line in linelist:
+        m=p1.match(line);
+        if not m == None:
+            #print(m.group(0));
+            TitleList.append(m.group(0));
+    return TitleList;
 
-while '' in lines:
-    lines.remove('');#去掉换行符号
-    
+#得到表头对应的行数
+def ReadTitleIndexList(linelist):
+    TitleIndexList=[];
+    TitleList=ReadTitle(linelist);
+    for line in linelist:
+        for title in TitleList:
+            if title == line:
+                TitleIndexList.append([title,linelist.index(title)]);
+    return TitleIndexList
+
+
+lines=ReadMapFile('mfs.yrm');
 '''正则化匹配表头'''
-p1 = re.compile('[\[](.*?)[\]]', re.S)
+
 #m = p1.match('[IsoMapPack5]');
 
 
-TitleList=[];
+
 '''读取所有表头'''
-for line in lines:
-    m=p1.match(line);
-    if not m == None:
-        #print(m.group(0));
-        TitleList.append(m.group(0));
+TitleList=ReadTitle(lines);
         
 
-TitleindexList=[];
-for line in lines:
-    for title in TitleList:
-        if title == line:
-            TitleindexList.append([title,lines.index(title)]);
+TitleindexList=ReadTitleIndexList(lines);
+
 start=lines.index('[IsoMapPack5]');
 index1=TitleList.index('[IsoMapPack5]');
 end=TitleindexList[index1+1][1];
