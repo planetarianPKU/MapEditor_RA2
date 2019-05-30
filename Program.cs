@@ -1543,8 +1543,11 @@ namespace EditMap2
         {
             //就改这里！
             string mapSection = System.IO.File.ReadAllText(@"C:\Users\16000\Desktop\IsoMapPack5.section");
-            int Width = 200;
-            int Height = 200;
+            string Size_of_Map = System.IO.File.ReadAllText(@"C:\Users\16000\Desktop\mfs.size");
+            string[] sArray = Size_of_Map.Split(",");
+            int Width = Int32.Parse(sArray[2]);
+            int Height = Int32.Parse(sArray[3]);
+            Console.WriteLine("Width={0},Height={0}", Width, Height);
             int cells = (Width * 2 - 1) * Height;
             IsoTile[,] Tiles = new IsoTile[Width*2-1, Height];//这里值得注意
             byte[] lzoData = Convert.FromBase64String(mapSection);
