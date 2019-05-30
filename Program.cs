@@ -62,7 +62,7 @@ namespace EditMap2
             // support for Ares tag
             var includes = GetOrCreateSection("#include");
             //foreach (var entry in includes.OrderedEntries)
-              //  MergeWith(VFS.Open<IniFile>(entry.Value));
+            //  MergeWith(VFS.Open<IniFile>(entry.Value));
         }
 
         int ProcessLine(string line)
@@ -1549,9 +1549,9 @@ namespace EditMap2
             int Height = Int32.Parse(sArray[3]);
             Console.WriteLine("Width={0},Height={0}", Width, Height);
             int cells = (Width * 2 - 1) * Height;
-            IsoTile[,] Tiles = new IsoTile[Width*2-1, Height];//这里值得注意
+            IsoTile[,] Tiles = new IsoTile[Width * 2 - 1, Height];//这里值得注意
             byte[] lzoData = Convert.FromBase64String(mapSection);
- 
+
             //Console.WriteLine(cells);
             int lzoPackSize = cells * 11 + 4;
             var isoMapPack = new byte[lzoPackSize];
@@ -1580,7 +1580,7 @@ namespace EditMap2
                 byte zero2 = mf.ReadByte();
                 //这是我用来调试的
                 //if (tilenum==49){
-                  //  Console.WriteLine("rx={0},ry={1},tilenum={2},subtile={3},z={4}", rx, ry, tilenum, subtile, z); }
+                //  Console.WriteLine("rx={0},ry={1},tilenum={2},subtile={3},z={4}", rx, ry, tilenum, subtile, z); }
                 //一次循环读11 bytes
                 count++;
                 int dx = rx - ry + Width - 1;
@@ -1597,7 +1597,7 @@ namespace EditMap2
 
                     Tiles[(ushort)dx, (ushort)dy / 2] = tile;//给瓷砖赋值
                     Tile_input_list.Add(tile);
-                   // Console.WriteLine("{3}", dx, dy, rx,ry);
+                    // Console.WriteLine("{3}", dx, dy, rx,ry);
                     //Console.WriteLine("{1}",dx,dy/2,count);
                     //Console.WriteLine(tile.TileNum);
                     //Console.WriteLine("Hello World 1");
@@ -1627,7 +1627,7 @@ namespace EditMap2
             //var TilesList = new List<IsoTile>();
             //Console.WriteLine(TilesList);
 
-            
+
             /*
             int count2 = 0;
             foreach (var tile in Tiles)
@@ -1641,36 +1641,36 @@ namespace EditMap2
             //Console.WriteLine(Tiles);
             //以下是生成编码部分
             ///*
-               long di = 0;
-               var isoMapPack2 = new byte[lzoPackSize]; 
-               foreach (var tile in  Tile_input_list)
-               {//if (tile != null) { //这里的判断是我加的TODO 为什么会有NULL
-                //但是这样会导致生成的isoMapPack5和原来的不是一种了
-                   //Console.WriteLine("{1}", tile.Rx, tile.Ry);
-                   var bs = tile.ToMapPack5Entry().ToArray();//ToMapPack5Entry的定义在MapObjects.cs
-                                                             //ToArray将ArrayList转换为Array：
-                   Array.Copy(bs, 0, isoMapPack2, di, 11);//把bs复制给isoMapPack,从di索引开始复制11个字节
-                   di += 11;//一次循环复制11个字节
-                  // }
-               }
+            long di = 0;
+            var isoMapPack2 = new byte[lzoPackSize];
+            foreach (var tile in Tile_input_list)
+            {//if (tile != null) { //这里的判断是我加的TODO 为什么会有NULL
+             //但是这样会导致生成的isoMapPack5和原来的不是一种了
+             //Console.WriteLine("{1}", tile.Rx, tile.Ry);
+                var bs = tile.ToMapPack5Entry().ToArray();//ToMapPack5Entry的定义在MapObjects.cs
+                                                          //ToArray将ArrayList转换为Array：
+                Array.Copy(bs, 0, isoMapPack2, di, 11);//把bs复制给isoMapPack,从di索引开始复制11个字节
+                di += 11;//一次循环复制11个字节
+                         // }
+            }
 
-               var compressed = Format5.Encode(isoMapPack2, 5);
+            var compressed = Format5.Encode(isoMapPack2, 5);
 
-               string compressed64 = Convert.ToBase64String(compressed);
-               //Console.WriteLine(compressed64);
-               int j = 1;
-               int idx = 0;
-               var isoMapPack5=new IniFile.IniSection();//问题可能出在这里
-               isoMapPack5.Clear();
-               while (idx < compressed64.Length)
-               {
-                   int adv = Math.Min(74, compressed64.Length - idx);//74是什么
-                   isoMapPack5.SetValue(j++.ToString(),
-                                        compressed64.Substring(idx, adv));//start length
-                   idx += adv;//idx=adv+1
-               }
-               Console.WriteLine(isoMapPack5);
-// System.IO.File.WriteAllText(@"C:\Users\16000\Desktop\IsoMapPack5.section", isoMapPack5);
+            string compressed64 = Convert.ToBase64String(compressed);
+            //Console.WriteLine(compressed64);
+            int j = 1;
+            int idx = 0;
+            var isoMapPack5 = new IniFile.IniSection();//问题可能出在这里
+            isoMapPack5.Clear();
+            while (idx < compressed64.Length)
+            {
+                int adv = Math.Min(74, compressed64.Length - idx);//74是什么
+                isoMapPack5.SetValue(j++.ToString(),
+                                     compressed64.Substring(idx, adv));//start length
+                idx += adv;//idx=adv+1
+            }
+            //Console.WriteLine(isoMapPack5);
+            System.IO.File.WriteAllText(@"C:\Users\16000\Desktop\IsoMapPack5.section", Convert.ToString(isoMapPack5));
             //*/
         }
     }
